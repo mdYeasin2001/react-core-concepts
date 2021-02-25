@@ -7,6 +7,17 @@
   pointer-events: none;
 }
 
+.incorrect{
+  color: red;
+}
+.addition h2, .addition h3{
+  margin: 0;
+}
+.addition input{
+  font-size: 18px;
+  padding: 2px 5px;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

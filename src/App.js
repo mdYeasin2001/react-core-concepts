@@ -14,22 +14,62 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h3>Learning React</h3>
-        <Count/>
-        <User/>
-        <ul>
+        {/* <Count/> */}
+        {/* <User/> */}
+        {/* <ul>
           {
             friends.map(friend => <li>{friend}</li>)
           }
           {
             products.map(pd => <li>{pd.name}</li>)
           }
-        </ul>
-        {
+        </ul> */}
+        {/* {
           products.map(pd => <Product productData={pd}/>)
-        }
+        } */}
+
+        <AdditionGame/>
+
       </header>
     </div>
   );
+}
+
+function AdditionGame() {
+  const [num1, setNum1] = useState(1);
+  const [num2, setNum2] = useState(1);
+  const [score, setScore] = useState(0);
+  const [incorrect, setIncorrect] = useState(false);
+  let [response, setResponse] = useState('');
+
+  const handleKeyPress = (event) => {
+    if(event.key === 'Enter'){
+      const answer = +response;
+      // console.log(answer, num1 + num2);
+      if (answer == num1 + num2){
+        setScore(score + 1);
+        setNum1(Math.ceil(Math.random() * 10));
+        setNum2(Math.ceil(Math.random() * 10));
+        setResponse('');
+        setIncorrect(false);
+      }else{
+        setResponse('');
+        setIncorrect(true);
+      }
+    }
+  }
+  return(
+    <div className="addition">
+      <h1>Test Your Math Knowledge</h1>
+      <h2 className={incorrect ? 'incorrect' : ''}>{num1} + {num2}</h2>
+      <input onKeyPress={handleKeyPress} onChange={(event) => setResponse(response = event.target.value)} value={response} type="text"/>
+      <div>
+        <h3>Score: {score}</h3>
+      </div>
+    </div>
+  );
+
+  
 }
 
 function User() {
