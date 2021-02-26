@@ -1,4 +1,3 @@
-import logo from "./logo.svg";
 import "./App.css";
 import { useEffect, useState } from "react";
 
@@ -13,7 +12,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h3>Learning React</h3>
+        <h1>Learning React</h1>
         {/* <Count/> */}
         {/* <User/> */}
         {/* <ul>
@@ -29,6 +28,8 @@ function App() {
         } */}
 
         <AdditionGame/>
+        <CurrencyConversion/>
+        <MathTest/>
 
       </header>
     </div>
@@ -36,8 +37,8 @@ function App() {
 }
 
 function AdditionGame() {
-  const [num1, setNum1] = useState(1);
-  const [num2, setNum2] = useState(1);
+  const [num1, setNum1] = useState(Math.ceil(Math.random() * 10));
+  const [num2, setNum2] = useState(Math.ceil(Math.random() * 10));
   const [score, setScore] = useState(0);
   const [incorrect, setIncorrect] = useState(false);
   let [response, setResponse] = useState('');
@@ -53,7 +54,6 @@ function AdditionGame() {
         setResponse('');
         setIncorrect(false);
       }else{
-        setResponse('');
         setIncorrect(true);
       }
     }
@@ -66,10 +66,139 @@ function AdditionGame() {
       <div>
         <h3>Score: {score}</h3>
       </div>
+      <hr/>
     </div>
   );
 
   
+}
+
+const CurrencyConversion = () => {
+  const [currencyOptions, setCurrencyOptions] = useState([]);
+  const [fromCurrency, setFromCurrency] = useState();
+  const [toCurrency, setToCurrency] = useState();
+  let [amount, setAmount] = useState(1);
+  const [exchangeRate, setExchangeRate] = useState();
+  const [amountInFromCurrency, setAmountInFromCurrency] = useState(true);
+  console.log(exchangeRate);
+  let fromAmount, toAmount;
+  if(amountInFromCurrency){
+    fromAmount = amount;
+    toAmount = amount * exchangeRate;
+  }else{
+    toAmount = amount;
+    fromAmount = amount / exchangeRate;
+  }
+
+
+  console.log(fromCurrency, toCurrency);
+  useEffect(() => {
+    fetch('https://api.exchangeratesapi.io/latest')
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+      const firstCurrency = Object.keys(data.rates)[0];
+      setCurrencyOptions([data.base, ...Object.keys(data.rates)]);
+      setFromCurrency(data.base);
+      setToCurrency(firstCurrency);
+      setExchangeRate(data.rates[firstCurrency])
+    })
+  },[])
+  return (
+    <div className='currency-conversion-area'>
+      <h1>Currency Conversion</h1>
+      <CurrencyRow currencyKeys={currencyOptions} selectedCurrency={fromCurrency} onChangeCurrency={event => setFromCurrency(event.target.value)} amount={fromAmount} onAmountChange={(event) => setAmount(amount = event.target.value)}/>
+        <p>=</p>   
+      <CurrencyRow currencyKeys={currencyOptions} selectedCurrency={toCurrency} onChangeCurrency={event => setToCurrency(event.target.value)} amount={toAmount}/>
+      <hr/>
+    </div>
+  )
+}
+
+const MathTest = () => {
+  const [firstNumber, setFirstNumber] = useState(1);
+  const [secondNumber, setSecondNumber] = useState(1);
+  const [operator, setOperator] = useState('+');
+  let [score, setScore] = useState(0);
+  let [response, setResponse] = useState('');
+  const [incorrect, setIncorrect] = useState(false);
+  const handleEnterKeyPress = (event) => {
+    if(event.key === 'Enter'){
+      const answer = +response;
+      if(score >= 2){
+        setOperator('-');
+      }
+      if(score >= 5){
+        setOperator('*');
+      }
+      if(score >= 6){
+        setOperator('/');
+      }
+      if(operator === '+'){
+        if(answer === firstNumber + secondNumber){
+          setScore(score + 1);
+          setFirstNumber(Math.ceil(Math.random() * 10));
+          setSecondNumber(Math.ceil(Math.random() * 10));
+          setIncorrect(false);
+          setResponse('');
+        }else{
+          setIncorrect(true);
+        }
+      }else if(operator === '-'){
+        if(answer === firstNumber - secondNumber){
+          setScore(score + 1);
+          setFirstNumber(Math.ceil(Math.random() * 10));
+          setSecondNumber(Math.ceil(Math.random() * 10));
+          setIncorrect(false);
+          setResponse('');
+        }else{
+          setIncorrect(true);
+        }
+      }else if(operator === '*'){
+        if(answer === firstNumber * secondNumber){
+          setScore(score + 1);
+          setFirstNumber(Math.ceil(Math.random() * 10));
+          setSecondNumber(Math.ceil(Math.random() * 10));
+          setIncorrect(false);
+          setResponse('');
+        }else{
+          setIncorrect(true);
+        }
+      }else if(operator === '/'){
+        if(answer === firstNumber / secondNumber){
+          setScore(score + 1);
+          setFirstNumber(Math.ceil(Math.random() * 10));
+          setSecondNumber(Math.ceil(Math.random() * 10));
+          setIncorrect(false);
+          setResponse('');
+        }else{
+          setIncorrect(true);
+        }
+      }
+    }
+  }
+  return (
+    <div className="math-test-area">
+      <h1>How is Your Math? Take a Test.</h1>
+      <h3 className={incorrect ? 'incorrect-answer' : ''}>{firstNumber} {operator} {secondNumber}</h3>
+      <input onKeyPress={handleEnterKeyPress} type="text" value={response} onChange={(event) => setResponse(response = event.target.value)}/>
+      <h3>Score: {score}</h3>
+    </div>
+  )
+}
+
+const CurrencyRow = ({currencyKeys, selectedCurrency, onChangeCurrency, amount, onAmountChange}) => {
+  // console.log(selectedCurrency);
+  return (
+    <div>
+      <input type="number" name="" id="" value={amount} onChange={onAmountChange}/>
+      <select value={selectedCurrency} onChange={onChangeCurrency}>
+        {
+          currencyKeys.map((key, i) => <option key={i} value={key}>{key}</option>)
+        }
+      </select>
+    </div>
+  )
 }
 
 function User() {

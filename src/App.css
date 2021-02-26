@@ -18,6 +18,27 @@
   padding: 2px 5px;
 }
 
+.currency-conversion-area{
+  padding-bottom: 50px;
+}
+.currency-conversion-area input{
+  font-size: 18px;
+}
+.currency-conversion-area select{
+  margin-left: 5px;
+  font-size: 18px;
+}
+.currency-conversion-area p{
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.math-test-area input{
+  font-size: 18px;
+}
+.incorrect-answer{
+  color: red;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
